@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "visioncrack"
+version = "0.1.0"
+description = "Crack width measurement from smartphone images using a custom 1D barcode reference"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "numpy>=2.2",
+  "opencv-python>=4.11",
+  "pandas>=2.3",
+  "matplotlib>=3.10",
+  "scikit-learn>=1.7",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "jupyter", "nbconvert", "nbstripout", "ruff"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

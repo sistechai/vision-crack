@@ -1,0 +1,19 @@
+# data and generated outputs (data is hosted on Zenodo)
+data/raw/
+data/processed/
+results/
+
+# python
+__pycache__/
+*.egg-info/
+.venv/
+env/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# os / editors
+.DS_Store
+.vscode/
+.claude/
+.idea/
+
