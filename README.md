@@ -19,6 +19,7 @@ for ten inspectors with crack gauges. Its standard deviation was **0.0086 mm**, 
 src/visioncrack/   core method (ROI, corner detection, gates, width, scale, error model)
 notebooks/         one notebook per figure / table, numbered in paper order
 data/              dataset description; full data on Zenodo, a 1-image sample in git
+mobile/            capture app (Flutter): guide box, corner detection, gates, save to gallery
 scripts/           download / package data, run all notebooks
 tests/             unit and regression tests (pytest)
 ```
@@ -70,8 +71,11 @@ Figures that are drawings or photos (overview, label design, field use) are not 
 
 ## Mobile app
 
-The guided-capture app is in `mobile/` *(being prepared)*. `src/visioncrack/detection.py` and `gates.py`
-are line-by-line ports of its detection code; notebook 02 shows they find the same corners as the phone (≤ 2 px).
+`mobile/` is the guided-capture app (Flutter, Android and iOS). It has one screen with your captures and a
+**Capture** button. The photo is taken automatically when the three gates pass, and it is saved to the phone
+gallery with a JSON file holding the corners and gate values. There is no server or login. See `mobile/README.md`.
+`src/visioncrack/detection.py` and `gates.py` are ports of its detector. Notebook 02 and `flutter test` check
+that both find the phone's corners on the sample capture (≤ 2 px).
 
 ## Printing the label
 

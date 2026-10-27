@@ -18,3 +18,19 @@ jobs:
         run: pytest -q
       - name: Notebooks on the sample data
         run: bash scripts/run_all_notebooks.sh 01 02 03 04
+
+  mobile:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze
+      - name: Detector tests on the sample capture
+        run: flutter test

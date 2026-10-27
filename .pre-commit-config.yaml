@@ -26,3 +26,8 @@ repos:
         language: pygrep
         entry: '/Users/[A-Za-z]|/home/[a-z]+/'
         exclude: ^\.pre-commit-config\.yaml$
+      - id: no-apple-team-id
+        name: no Apple developer team id in the Xcode project (each builder sets their own)
+        language: pygrep
+        entry: 'DEVELOPMENT_TEAM = '
+        files: \.pbxproj$
