@@ -26,7 +26,7 @@ data/
 | `table1_et` | VisionCrack #26 | `3D6m` | 5 4 3 · 1 3 4 · 4 2 3 · 1 4 3 · 2 5 4 · 1 2 3 | 2160 × 3840 |
 | `robustness` | Vision Crack #1 | `lewb` | 5 4 3 · 2 5 3 · 2 3 1 · 3 5 1 · 2 1 3 · 1 2 3 | 3024 × 4032 |
 
-<!-- TODO(author): phone model(s) for each set. -->
+The phone model was not recorded in the capture metadata. Both sets were taken with the VisionCrack app at the camera's full resolution.
 
 Ground-truth widths of the printed targets: 0.55, 1.10, 1.65, 2.20, 2.75 mm (ET-1..ET-5).
 

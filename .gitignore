@@ -1,6 +1,7 @@
 # data and generated outputs (data is hosted on Zenodo)
 data/raw/
 data/processed/
+data/*.zip
 results/
 
 # python
@@ -16,4 +17,3 @@ env/
 .vscode/
 .claude/
 .idea/
-

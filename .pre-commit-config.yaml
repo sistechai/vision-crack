@@ -2,7 +2,8 @@ repos:
   - repo: https://github.com/kynan/nbstripout
     rev: 0.8.1
     hooks:
-      - id: nbstripout          # keep notebook outputs out of git; executed copies go to the release
+      - id: nbstripout
+        args: [--keep-output]   # outputs stay so GitHub shows every figure; only noisy metadata is removed
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.9
     hooks:
@@ -15,4 +16,13 @@ repos:
       - id: check-added-large-files
         args: [--maxkb=10000]
       - id: end-of-file-fixer
+        exclude: \.ipynb$
       - id: trailing-whitespace
+        exclude: \.ipynb$
+  - repo: local
+    hooks:
+      - id: no-local-paths
+        name: no local absolute paths (e.g. /Users/<name>) in published files
+        language: pygrep
+        entry: '/Users/[A-Za-z]|/home/[a-z]+/'
+        exclude: ^\.pre-commit-config\.yaml$
