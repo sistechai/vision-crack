@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>The camera photographs the VisionCrack label and the crack next to it.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Captures are saved to the VisionCrack album in your photos.</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Motion data is used to wait until the phone is held still before taking the photo.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -32,6 +26,12 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>The camera photographs the VisionCrack label and the crack next to it.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Motion data is used to wait until the phone is held still before taking the photo.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Captures are added to your photos.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

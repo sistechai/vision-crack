@@ -39,6 +39,7 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   String? _error;
   Size? _screen;
 
+  bool _opening = false; // camera is being opened
   bool _busy = false; // a frame is being analysed
   bool _saving = false; // gates passed, photo is being saved
   int _frame = 0;
@@ -77,17 +78,28 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final c = _camera;
-    if (c == null || !c.value.isInitialized) return;
-    if (state == AppLifecycleState.inactive) {
-      _camera = null;
-      c.dispose();
-    } else if (state == AppLifecycleState.resumed && !_saving) {
+    // Leaving the app (e.g. to Settings) releases the camera; coming back reopens it.
+    // The permission dialog also makes the app inactive, but then no camera is open yet.
+    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+      _closeCamera();
+    } else if (state == AppLifecycleState.resumed && _camera == null && !_saving) {
       _openCamera();
     }
   }
 
+  Future<void> _closeCamera() async {
+    final c = _camera;
+    if (c == null) return;
+    setState(() => _camera = null); // remove the preview before disposing its controller
+    try {
+      if (c.value.isStreamingImages) await c.stopImageStream();
+    } catch (_) {}
+    await c.dispose();
+  }
+
   Future<void> _openCamera() async {
+    if (_opening) return;
+    _opening = true;
     try {
       final cams = await availableCameras();
       final back = cams.firstWhere((c) => c.lensDirection == CameraLensDirection.back, orElse: () => cams.first);
@@ -106,17 +118,20 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
       });
       await c.startImageStream(_onFrame);
     } on CameraException catch (e) {
+      if (!mounted) return;
       setState(() => _error = e.code == 'CameraAccessDenied'
           ? 'Camera permission is off. Allow it in Settings to capture.'
           : 'Camera error: ${e.description ?? e.code}');
     } catch (e) {
-      setState(() => _error = 'No camera available.');
+      if (mounted) setState(() => _error = 'No camera available.');
+    } finally {
+      _opening = false;
     }
   }
 
   Future<void> _onFrame(CameraImage frame) async {
     _frame++;
-    if (_busy || _saving || _screen == null || _frame % 3 != 0) return;
+    if (_busy || _saving || _camera == null || _screen == null || _frame % 3 != 0) return;
     _busy = true;
     try {
       await _analyse(frame);
@@ -126,7 +141,8 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
   }
 
   Future<void> _analyse(CameraImage frame) async {
-    final c = _camera!;
+    final c = _camera;
+    if (c == null) return;
     final turns = quarterTurnsFor(frame, c.description.sensorOrientation);
     final (iw, ih) = uprightSize(frame, turns);
     final roi = Roi.inImage(_screen!, Size(iw.toDouble(), ih.toDouble()));
@@ -204,7 +220,8 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
       body: LayoutBuilder(builder: (context, box) {
         _screen = box.biggest;
         final roi = Roi.onScreen(box.biggest);
-        return Stack(children: [
+        // SizedBox.expand: the stack fills the screen (otherwise it shrinks to its largest unpinned child).
+        return SizedBox.expand(child: Stack(children: [
           if (c != null && c.value.isInitialized) Positioned.fill(child: _FullScreenPreview(controller: c)),
           if (_error != null)
             Center(
@@ -233,40 +250,44 @@ class _CaptureScreenState extends State<CaptureScreen> with WidgetsBindingObserv
                 Text('Saving photo…', style: TextStyle(color: Colors.white)),
               ]),
             ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
-                style: IconButton.styleFrom(backgroundColor: Colors.black45),
-                onPressed: _saving ? null : () => Navigator.of(context).pop(),
+          Positioned(
+            top: 0,
+            left: 0,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  style: IconButton.styleFrom(backgroundColor: Colors.black45),
+                  onPressed: _saving ? null : () => Navigator.of(context).pop(),
+                ),
               ),
             ),
           ),
-        ]);
+        ]));
       }),
     );
   }
 }
 
-/// Camera preview scaled to fill the screen height (the ROI formula assumes this).
+/// Camera preview covering the whole screen, centred. On a phone taller than 16:9 the preview
+/// fills the screen height and is cropped at the sides, which is what the ROI formula assumes.
 class _FullScreenPreview extends StatelessWidget {
   final CameraController controller;
   const _FullScreenPreview({required this.controller});
 
   @override
   Widget build(BuildContext context) {
-    final p = controller.value.previewSize!;
-    final ratio = math.max(p.width, p.height) / math.min(p.width, p.height); // height / width in portrait
-    return LayoutBuilder(builder: (context, box) {
-      return ClipRect(
-        child: OverflowBox(
-          maxWidth: double.infinity,
-          maxHeight: box.maxHeight,
-          child: SizedBox(width: box.maxHeight / ratio, height: box.maxHeight, child: CameraPreview(controller)),
-        ),
-      );
-    });
+    final p = controller.value.previewSize;
+    if (p == null) return const SizedBox.expand();
+    // previewSize is reported in landscape; the app is portrait.
+    final w = math.min(p.width, p.height), h = math.max(p.width, p.height);
+    return ClipRect(
+      child: FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(width: w, height: h, child: CameraPreview(controller)),
+      ),
+    );
   }
 }
 

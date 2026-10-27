@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local iOS signing (team id, bundle id)
+ios/Flutter/Signing.local.xcconfig

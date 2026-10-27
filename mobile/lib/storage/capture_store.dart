@@ -1,5 +1,5 @@
 // Saved captures: <app documents>/captures/VisionCrack_<unix-ms>.jpg + .json (no GPS).
-// Each capture is also copied to the phone gallery, album "VisionCrack".
+// Each capture is also copied to the phone gallery (Android: album "VisionCrack"; iOS: Recents).
 import 'dart:convert';
 import 'dart:io';
 
@@ -46,9 +46,12 @@ class CaptureStore {
         .writeAsString(const JsonEncoder.withIndent('  ').convert({'captured_at': now.toIso8601String(), ...meta}));
 
     var inGallery = false;
+    // iOS: creating an album needs full photo-library (read) access, so the photo goes straight to
+    // the library with add-only access. Android: album "VisionCrack" needs no extra permission.
+    final useAlbum = Platform.isAndroid;
     try {
-      if (await Gal.hasAccess(toAlbum: true) || await Gal.requestAccess(toAlbum: true)) {
-        await Gal.putImage(image.path, album: album);
+      if (await Gal.hasAccess(toAlbum: useAlbum) || await Gal.requestAccess(toAlbum: useAlbum)) {
+        await Gal.putImage(image.path, album: useAlbum ? album : null);
         inGallery = true;
       }
     } catch (_) {

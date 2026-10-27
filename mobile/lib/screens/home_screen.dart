@@ -1,4 +1,6 @@
 // Main screen: saved captures (newest first) and one Capture button.
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../storage/capture_store.dart';
@@ -40,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (result != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(result.inGallery
-            ? 'Saved to the gallery (album "${CaptureStore.album}")'
+            ? (Platform.isAndroid ? 'Saved to the gallery (album "${CaptureStore.album}")' : 'Saved to Photos')
             : 'Saved in the app. Gallery access is off, so it was not copied there.'),
       ));
     }

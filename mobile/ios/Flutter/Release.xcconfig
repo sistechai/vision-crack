@@ -1,1 +1,7 @@
 #include "Generated.xcconfig"
+
+// Public defaults. Put your own signing team and bundle id in Flutter/Signing.local.xcconfig
+// (git-ignored; copy Signing.local.xcconfig.example).
+PRODUCT_BUNDLE_IDENTIFIER = org.visioncrack.visioncrackCapture
+DEVELOPMENT_TEAM =
+#include? "Signing.local.xcconfig"

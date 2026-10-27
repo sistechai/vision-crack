@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import collections
 from dataclasses import dataclass
-from pathlib import Path
 
 import cv2
 import numpy as np
@@ -141,7 +140,7 @@ def classes_and_scale(positions):
     km = KMeans(5, random_state=42, n_init=10).fit(positions.reshape(-1, 1))
     order = np.argsort(km.cluster_centers_.ravel())
     rank = {lab: i + 1 for i, lab in enumerate(order)}
-    classes = [rank[l] for l in km.labels_]
+    classes = [rank[lab] for lab in km.labels_]
     scale, cov = barcode_scale(km.cluster_centers_.ravel())
     return classes, scale, cov
 
@@ -330,8 +329,8 @@ def kmeans_core(M):
     pos = np.median(M, 0)
     km = KMeans(5, random_state=42, n_init=10).fit(pos.reshape(-1, 1))
     order = np.argsort(km.cluster_centers_.ravel())
-    rank = {l: i + 1 for i, l in enumerate(order)}
-    seq = ''.join(str(rank[l]) for l in km.labels_)
+    rank = {lab: i + 1 for i, lab in enumerate(order)}
+    seq = ''.join(str(rank[lab]) for lab in km.labels_)
     i = seq.find('543')
     j = seq.find('123', i) if i >= 0 else -1
     if i < 0 or j < 0 or (j - i) % 3:

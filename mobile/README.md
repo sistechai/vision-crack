@@ -6,7 +6,8 @@ The guided-capture part of the paper's app, on its own. It has no login, server,
 * **Capture screen:** the camera with the guide box. The photo is taken **automatically** once the label is
   found at all four corners, fills the box (> 95 % on each side) and is upright (< 2°). A hint tells you what to fix
   ("Move closer", "Almost there", "Straighten the phone", "Hold steady").
-* **Saved:** each photo goes to the gallery album **VisionCrack**, and to the app's own folder together with a
+* **Saved:** each photo goes to the phone gallery (Android: album **VisionCrack**; iPhone: Photos, which needs only
+  "add photos" permission), and to the app's own folder together with a
   `.json` file: image size, guide-box position, the four corners, the coverage values and the angle.
 
 ## Build and run
