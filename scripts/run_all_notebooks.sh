@@ -11,10 +11,17 @@ else
   nbs=(notebooks/0*.ipynb)
 fi
 
+# Saved outputs in git come from the full data. Any other data set (e.g. the CI sample) writes to a temp dir.
+if [ -n "${VISIONCRACK_DATA:-}" ] && [ "${VISIONCRACK_DATA%/}" != "data/raw" ]; then
+  out=(--output-dir "$(mktemp -d)")
+else
+  out=(--inplace)
+fi
+
 for nb in "${nbs[@]}"; do
   echo "▶ $nb"
   start=$(date +%s)
-  jupyter nbconvert --to notebook --execute "$nb" --inplace --ExecutePreprocessor.timeout=600 >/dev/null
+  jupyter nbconvert --to notebook --execute "$nb" "${out[@]}" --ExecutePreprocessor.timeout=600 >/dev/null
   echo "  ✓ $(( $(date +%s) - start )) s"
 done
 echo "all ${#nbs[@]} notebooks passed"
