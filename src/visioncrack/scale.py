@@ -9,7 +9,7 @@ That is not a width detected per image. It works because the capture gates force
 
 **Barcode-class scale** (``barcode_scale``, robustness sweep). The 18 bars are clustered into their 5
 thickness classes (0.5–2.5 mm). The scale is the mean of class_mm / class_px. It is measured per capture, so it
-follows the camera distance. It also avoids one issue found in the revision work: the red frame of label
+follows the camera distance. It also avoids one issue found during the analysis: the red frame of label
 "#1" spans ≈ 44 mm rather than 50 mm, which makes 50 mm / frame width overshoot by ≈ 13 %.
 """
 

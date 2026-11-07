@@ -9,7 +9,7 @@ Mirrors ``mobile/.../detection.dart`` (``quantizeUsingHSV``, ``findRedBlocksInRe
    each ROI corner is taken as that corner of the label.
 
 The app searches **64-px bands** at the top and bottom, not the full halves the
-manuscript describes; the port keeps the app's behaviour (``band=64``).
+paper describes; the port keeps the app's behaviour (``band=64``).
 """
 
 from __future__ import annotations

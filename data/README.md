@@ -13,7 +13,8 @@ data/
 │   │   ├── metadata.csv             app-detected corners (ROI coordinates)
 │   │   ├── inspectors.csv           10 inspectors × 5 targets, crack-gauge readings (mm)
 │   │   └── README.md
-│   └── robustness/              # revision sweep: label "#1" (code lewb), 45 handheld captures
+│   ├── phone/IMG_*.png          # real crack, 21 photos with the phone's own camera app (not VisionCrack), 3024×4032, PNG converted from HEIC with ffmpeg, no EXIF/GPS (notebook 13)
+│   └── robustness/              # sensitivity sweep (paper Sec. III-A): label "#1" (code lewb), 45 handheld captures
 │       ├── norm/  dist/  roll/  pitch/  yaw/    <unix-ts>_<a>_<b>_<c>.jpg, 3024×4032
 │       └── metadata.csv
 ├── synthetic/pose_points.json   # synthetic label corners for rotation / pitch / yaw (notebook 03)

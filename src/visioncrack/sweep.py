@@ -1,6 +1,6 @@
-"""Measurement chain for the 45-capture robustness sweep (revision experiments).
+"""Measurement chain for the 45-capture robustness sweep (paper Sec. III-A).
 
-Ported from the revision notebook with the same parameters so the published numbers
+It uses the same parameters as the original analysis, so the published numbers
 reproduce. Per capture it:
 
 1. finds the red label frame (``label_rect``): in-plane angle + coverage

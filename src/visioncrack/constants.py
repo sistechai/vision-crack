@@ -1,4 +1,4 @@
-"""Constants from the paper. Section and equation numbers refer to the manuscript."""
+"""Constants from the paper. Section and equation numbers refer to the paper."""
 
 # --- Label geometry (Sec. 2.1.1) ---
 LABEL_WIDTH_MM = 50.0          # physical label width used as the scale reference (Sec. 2.3.2)

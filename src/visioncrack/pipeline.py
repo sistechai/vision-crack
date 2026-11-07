@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from .constants import (BARCODE_MARGIN_X, BARCODE_MARGIN_Y_FRAC, ET_BAND_BOTTOM,
-                        ET_BAND_TOP, ET_LAYOUT, N_BARCODE_BARS)
+                        ET_BAND_TOP, ET_LAYOUT, MIN_RUN_PX, N_BARCODE_BARS)
 from .roi import Roi
 from .scale import mm_per_px
 from .width import binarize, blur_gray, column_means, measurement_matrix
@@ -37,7 +37,7 @@ def barcode_box(bbox: np.ndarray, roi: Roi) -> tuple[int, int, int, int]:
 
 def measure_capture(rgb: np.ndarray, bbox: np.ndarray, roi: Roi,
                     layout: tuple[int, ...] = ET_LAYOUT,
-                    paper_compat: bool = True) -> Measurement:
+                    paper_compat: bool = True, min_run: int = MIN_RUN_PX) -> Measurement:
     """Measure the printed ET bars in one capture, as done for Table 1.
 
     1. Barcode crop → Otsu. The threshold is reused for the ET crop so both
@@ -48,11 +48,11 @@ def measure_capture(rgb: np.ndarray, bbox: np.ndarray, roi: Roi,
     """
     x0, y0, x1, y1 = barcode_box(bbox, roi)
     t, bin_bc = binarize(blur_gray(rgb[y0:y1, x0:x1], paper_compat))
-    barcode_M = measurement_matrix(bin_bc, N_BARCODE_BARS)
+    barcode_M = measurement_matrix(bin_bc, N_BARCODE_BARS, min_run)
 
     ex0, ey0, ex1, ey1 = x0, y0 - ET_BAND_TOP, x1, y0 - ET_BAND_BOTTOM
     _, bin_et = binarize(blur_gray(rgb[ey0:ey1, ex0:ex1], paper_compat), thresh=t)
-    et_M = measurement_matrix(bin_et, len(layout))
+    et_M = measurement_matrix(bin_et, len(layout), min_run)
 
     mu = column_means(et_M)
     by_class = np.empty(len(layout))

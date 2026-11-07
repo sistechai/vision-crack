@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 if [ "$#" -gt 0 ]; then
   nbs=(); for n in "$@"; do nbs+=(notebooks/"$n"_*.ipynb); done
 else
-  nbs=(notebooks/0*.ipynb)
+  nbs=(notebooks/[01][0-9]_*.ipynb)
 fi
 
 # Saved outputs in git come from the full data. Any other data set (e.g. the CI sample) writes to a temp dir.

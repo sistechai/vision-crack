@@ -34,6 +34,7 @@ def results_dir(kind: str = "figures") -> Path:
 
 
 def read_rgb(path: str | Path) -> np.ndarray:
+    """RGB image (JPEG or PNG)."""
     img = cv2.imread(str(path))
     if img is None:
         raise FileNotFoundError(path)
