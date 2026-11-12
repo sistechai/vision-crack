@@ -13,6 +13,13 @@ The method uses no extra hardware and no machine learning.
 On printed reference widths of 0.55–2.75 mm, VisionCrack's mean absolute error was **0.061 mm**, against **0.164 mm**
 for ten inspectors with crack gauges. Its standard deviation was **0.0086 mm**, against **0.118 mm**.
 
+## Demo
+
+<a href="data/sample/data/demo.mp4"><img src="data/sample/data/demo.gif" width="280" alt="VisionCrack capture app demo"></a>
+
+The capture app on an iPhone: the photo is taken automatically once the label meets the capture conditions.
+Click the preview for the full video ([demo.mp4](data/sample/data/demo.mp4)).
+
 ## Repository layout
 
 ```
